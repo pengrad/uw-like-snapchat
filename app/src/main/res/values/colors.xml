@@ -2,4 +2,9 @@
 <resources>
     <color name="transparent_yellow">#CCFEF634</color>
     <color name="dark_yellow">#CC9F9833</color>
+
+    <color name="transparent_gray">#CC666666</color>
+    <color name="transparent_dark_gray">#CC333333</color>
+
+    <color name="blue">#0066AA</color>
 </resources>

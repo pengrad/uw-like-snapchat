@@ -1,8 +1,10 @@
 package io.github.pengrad.uw_like_snapchat;
 
+import android.app.ProgressDialog;
 import android.content.pm.ActivityInfo;
 import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -16,11 +18,8 @@ import java.io.IOException;
 public class MainActivity extends AppCompatActivity implements TextureView.SurfaceTextureListener, View.OnClickListener, Camera.PictureCallback {
 
     private Camera mCamera;
-    private TextureView mTextureView;
 
-    public boolean showTransparentView = true;
     private View mTansparentView;
-    private Button mButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,17 +32,14 @@ public class MainActivity extends AppCompatActivity implements TextureView.Surfa
 
         setContentView(R.layout.activity_main);
 
-        mTextureView = (TextureView) findViewById(R.id.textureView);
-        mTextureView.setSurfaceTextureListener(this);
+        TextureView textureView = (TextureView) findViewById(R.id.textureView);
+        textureView.setSurfaceTextureListener(this);
 
         mTansparentView = findViewById(R.id.transparentView);
         mTansparentView.setVisibility(View.VISIBLE);
-        showTransparentView = true;
 
-        mButton = (Button) findViewById(R.id.button);
-        mButton.setOnClickListener(this);
-
-//        setContentView(mTextureView);
+        Button button = (Button) findViewById(R.id.button);
+        button.setOnClickListener(this);
     }
 
     private Camera openFrontFacingCamera() {
@@ -53,7 +49,7 @@ public class MainActivity extends AppCompatActivity implements TextureView.Surfa
         cameraCount = Camera.getNumberOfCameras();
         for (int camIdx = 0; camIdx < cameraCount; camIdx++) {
             Camera.getCameraInfo(camIdx, cameraInfo);
-            if (cameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+            if (cameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_BACK) {
                 try {
                     cam = Camera.open(camIdx);
                 } catch (RuntimeException e) {
@@ -96,18 +92,39 @@ public class MainActivity extends AppCompatActivity implements TextureView.Surfa
 
     @Override
     public void onClick(View v) {
-        if (showTransparentView) {
-            showTransparentView = false;
+        if (mTansparentView.getVisibility() == View.VISIBLE) {
             mTansparentView.setVisibility(View.GONE);
-            mButton.setText("Take a picture");
         } else {
-
             mCamera.takePicture(null, null, this);
         }
     }
 
     @Override
-    public void onPictureTaken(byte[] data, Camera camera) {
-        startActivity(DataActivity.newIntent(this, data));
+    public void onPictureTaken(final byte[] data, Camera camera) {
+        camera.startPreview();
+        new AsyncTask<Void, Integer, Integer>() {
+            ProgressDialog progressDialog;
+
+            @Override
+            protected void onPreExecute() {
+                progressDialog = new ProgressDialog(MainActivity.this);
+                progressDialog.setMessage("Analyzing pixels...");
+                progressDialog.setCancelable(false);
+                progressDialog.show();
+            }
+
+            @Override
+            protected Integer doInBackground(Void... params) {
+                return PixelCalculator.calcPixelsCount(data);
+            }
+
+            @Override
+            protected void onPostExecute(Integer pixelsCount) {
+                progressDialog.hide();
+                startActivity(DataActivity.newIntent(MainActivity.this, pixelsCount));
+            }
+        }.execute();
     }
+
+
 }

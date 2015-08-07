@@ -24,7 +24,9 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".DataActivity"/>
+        <activity
+            android:name=".DataActivity"
+            android:theme="@style/ActionBarTheme"/>
     </application>
 
 </manifest>

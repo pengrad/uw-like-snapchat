@@ -2,11 +2,10 @@ package io.github.pengrad.uw_like_snapchat;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 import android.widget.TextView;
 
 /**
@@ -15,40 +14,38 @@ import android.widget.TextView;
  */
 public class DataActivity extends AppCompatActivity {
 
-    public static final String EXTRA_PHOTO_DATA = "photo_data";
+    public static final String EXTRA_PIXELS_COUNT = "pixels_count";
 
-    public static Intent newIntent(Context context, byte[] data) {
+    public static Intent newIntent(Context context, int count) {
         Intent intent = new Intent(context, DataActivity.class);
-        intent.putExtra(EXTRA_PHOTO_DATA, data);
+        intent.putExtra(EXTRA_PIXELS_COUNT, count);
         return intent;
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_second);
 
-        byte[] data = getIntent().getByteArrayExtra(EXTRA_PHOTO_DATA);
+        setTitle("Result activity");
 
-        int count = 0;
-        Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
-        for (int w = 0; w < bitmap.getWidth(); w++) {
-            for (int h = 0; h < bitmap.getHeight(); h++) {
-                int color = bitmap.getPixel(w, h);
-
-                int red = Color.red(color);
-                int green = Color.green(color);
-                int blue = Color.blue(color);
-
-                if (red > 100 && green > 100 && blue > 100) {
-                    count++;
-                }
-            }
+        ActionBar bar = getSupportActionBar();
+        if (bar != null) {
+            bar.setDisplayHomeAsUpEnabled(true);
         }
 
-        TextView textView = new TextView(this);
-        textView.setText("Number of pixels higher than RGB(100,100,100) =  " + count);
+        int count = getIntent().getIntExtra(EXTRA_PIXELS_COUNT, 0);
 
+        TextView textView = (TextView) findViewById(R.id.textNumber);
+        textView.setText(String.valueOf(count));
+    }
 
-        setContentView(textView);
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

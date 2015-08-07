@@ -13,28 +13,25 @@
         android:id="@+id/transparentView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/transparent_yellow"/>
+        android:background="@color/transparent_gray"/>
 
-    <LinearLayout
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|center"
+        android:layout_marginTop="50dp"
+        android:text="My cool title"
+        android:textColor="@color/blue"
+        android:textSize="26sp"/>
+
+    <Button
+        android:id="@+id/button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center"
+        android:background="@drawable/bg_round_rectangle"
         android:layout_marginBottom="50dp"
-        android:orientation="vertical">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="TITLE"
-            android:textColor="@android:color/black"/>
-
-        <Button
-            android:id="@+id/button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="OK"/>
-    </LinearLayout>
+        android:text="Analyze"/>
 
 
 </FrameLayout>
