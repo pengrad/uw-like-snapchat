@@ -9,13 +9,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.TextureView;
 import android.view.View;
+import android.widget.Button;
 
 import java.io.IOException;
 
-public class MainActivity extends AppCompatActivity implements TextureView.SurfaceTextureListener {
+public class MainActivity extends AppCompatActivity implements TextureView.SurfaceTextureListener, View.OnClickListener, Camera.PictureCallback {
 
     private Camera mCamera;
     private TextureView mTextureView;
+
+    public boolean showTransparentView = true;
+    private View mTansparentView;
+    private Button mButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +35,13 @@ public class MainActivity extends AppCompatActivity implements TextureView.Surfa
 
         mTextureView = (TextureView) findViewById(R.id.textureView);
         mTextureView.setSurfaceTextureListener(this);
+
+        mTansparentView = findViewById(R.id.transparentView);
+        mTansparentView.setVisibility(View.VISIBLE);
+        showTransparentView = true;
+
+        mButton = (Button) findViewById(R.id.button);
+        mButton.setOnClickListener(this);
 
 //        setContentView(mTextureView);
     }
@@ -82,4 +94,20 @@ public class MainActivity extends AppCompatActivity implements TextureView.Surfa
         // Invoked every time there's a new Camera preview frame
     }
 
+    @Override
+    public void onClick(View v) {
+        if (showTransparentView) {
+            showTransparentView = false;
+            mTansparentView.setVisibility(View.GONE);
+            mButton.setText("Take a picture");
+        } else {
+
+            mCamera.takePicture(null, null, this);
+        }
+    }
+
+    @Override
+    public void onPictureTaken(byte[] data, Camera camera) {
+        startActivity(DataActivity.newIntent(this, data));
+    }
 }
