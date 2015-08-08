@@ -17,12 +17,16 @@ import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity implements TextureView.SurfaceTextureListener, View.OnClickListener, Camera.PictureCallback {
 
+    public static final int COLOR_CONDITION = 100;
+
     private Camera mCamera;
 
-    private View mTansparentView;
+    private View mTransparentView;
     private Button mButtonStart;
     private Button mButtonTakePhoto;
     private View mTextTitle;
+
+    private PixelCalculator mPixelCalculator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,13 +42,15 @@ public class MainActivity extends AppCompatActivity implements TextureView.Surfa
         TextureView textureView = (TextureView) findViewById(R.id.textureView);
         textureView.setSurfaceTextureListener(this);
 
-        mTansparentView = findViewById(R.id.transparentView);
+        mTransparentView = findViewById(R.id.transparentView);
         mTextTitle = findViewById(R.id.textTitle);
 
         mButtonStart = (Button) findViewById(R.id.buttonStart);
         mButtonTakePhoto = (Button) findViewById(R.id.buttonTakePhoto);
         mButtonStart.setOnClickListener(this);
         mButtonTakePhoto.setOnClickListener(this);
+
+        mPixelCalculator = new PixelCalculator(COLOR_CONDITION);
     }
 
     private Camera openFrontFacingCamera() {
@@ -98,7 +104,7 @@ public class MainActivity extends AppCompatActivity implements TextureView.Surfa
     @Override
     public void onClick(View v) {
         if (v.getId() == mButtonStart.getId()) {
-            mTansparentView.setVisibility(View.GONE);
+            mTransparentView.setVisibility(View.GONE);
             mTextTitle.setVisibility(View.GONE);
             mButtonStart.setVisibility(View.GONE);
             mButtonTakePhoto.setVisibility(View.VISIBLE);
@@ -110,7 +116,7 @@ public class MainActivity extends AppCompatActivity implements TextureView.Surfa
     @Override
     public void onPictureTaken(final byte[] data, Camera camera) {
         camera.startPreview();
-        new AsyncTask<Void, Integer, Integer>() {
+        new AsyncTask<Void, BitmapColorInfo, BitmapColorInfo>() {
             ProgressDialog progressDialog;
 
             @Override
@@ -122,14 +128,14 @@ public class MainActivity extends AppCompatActivity implements TextureView.Surfa
             }
 
             @Override
-            protected Integer doInBackground(Void... params) {
-                return PixelCalculator.calcPixelsCount(data);
+            protected BitmapColorInfo doInBackground(Void... params) {
+                return mPixelCalculator.getBitmapColorInfo(data);
             }
 
             @Override
-            protected void onPostExecute(Integer pixelsCount) {
+            protected void onPostExecute(BitmapColorInfo bitmapColorInfo) {
                 progressDialog.dismiss();
-                startActivity(DataActivity.newIntent(MainActivity.this, pixelsCount));
+                startActivity(DataActivity.newIntent(MainActivity.this, bitmapColorInfo));
             }
         }.execute();
     }

@@ -10,9 +10,19 @@ import android.graphics.Color;
  */
 public class PixelCalculator {
 
-    public static int calcPixelsCount(byte[] data) {
-        int count = 0;
+    private int colorCondition;
+
+    public PixelCalculator(int colorCondition) {
+        this.colorCondition = colorCondition;
+    }
+
+    public BitmapColorInfo getBitmapColorInfo(byte[] data) {
         Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+
+        int pixelsCount = bitmap.getWidth() * bitmap.getHeight();
+        int pixelsConditionCount = 0;
+        long reds = 0, greens = 0, blues = 0;
+
         for (int w = 0; w < bitmap.getWidth(); w++) {
             for (int h = 0; h < bitmap.getHeight(); h++) {
                 int color = bitmap.getPixel(w, h);
@@ -21,11 +31,19 @@ public class PixelCalculator {
                 int green = Color.green(color);
                 int blue = Color.blue(color);
 
-                if (red > 100 && green > 100 && blue > 100) {
-                    count++;
+                if (red > colorCondition && green > colorCondition && blue > colorCondition) {
+                    pixelsConditionCount++;
                 }
+                reds += red;
+                greens += green;
+                blues += blue;
             }
         }
-        return count;
+        int avgRed = (int) (reds / pixelsCount);
+        int avgGreen = (int) (greens / pixelsCount);
+        int avgBlue = (int) (blues / pixelsCount);
+        int avgColor = Color.rgb(avgRed, avgGreen, avgBlue);
+
+        return new BitmapColorInfo(pixelsCount, pixelsConditionCount, avgColor);
     }
 }

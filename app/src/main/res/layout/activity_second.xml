@@ -28,21 +28,25 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
+        android:layout_margin="10dp"
         android:gravity="center"
-        android:text="Number of pixels higher than RGB(100,100,100) "
+        android:text="Average color"
         android:textColor="@color/transparent_dark_gray"
         android:textSize="18sp"/>
 
+
+    <View
+        android:id="@+id/viewAvgColor"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:background="@android:color/black"/>
+
     <TextView
-        android:id="@+id/textAvgColor"
+        android:id="@+id/textAvgRGB"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
         android:gravity="center"
-        android:text="0"
         android:textColor="@android:color/black"
-        android:textSize="24sp"/>
+        android:textSize="18sp"/>
 
 </LinearLayout>
