@@ -29,7 +29,7 @@ public class DataActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_second);
-        setTitle("Result activity");
+        setTitle(getString(R.string.title__data_activity));
 
         ActionBar bar = getSupportActionBar();
         if (bar != null) {
@@ -57,7 +57,7 @@ public class DataActivity extends AppCompatActivity {
         int red = Color.red(avgColor);
         int green = Color.green(avgColor);
         int blue = Color.blue(avgColor);
-        textAvgRGB.setText(String.format("RGB (%d, %d, %d)", red, green, blue));
+        textAvgRGB.setText(String.format(getString(R.string.message__rgb), red, green, blue));
     }
 
     private void initCheckOnline() {
@@ -76,14 +76,14 @@ public class DataActivity extends AppCompatActivity {
                 if (status.networkType != null) {
                     if (status.isInternet) {
                         textOnline.setTextColor(getResources().getColor(R.color.green));
-                        textOnline.setText("Online with " + status.networkType);
+                        textOnline.setText(String.format(getString(R.string.message__online_with), status.networkType));
                     } else {
                         textOnline.setTextColor(getResources().getColor(R.color.red));
-                        textOnline.setText("Offline with " + status.networkType);
+                        textOnline.setText(String.format(getString(R.string.message__offline_with), status.networkType));
                     }
                 } else {
                     textOnline.setTextColor(getResources().getColor(R.color.red));
-                    textOnline.setText("Offline");
+                    textOnline.setText(R.string.message__offline);
                 }
             }
         }.execute();

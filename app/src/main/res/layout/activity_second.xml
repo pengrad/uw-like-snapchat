@@ -16,7 +16,7 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:gravity="center"
-            android:text="Number of pixels higher than RGB(100,100,100) "
+            android:text="@string/message__pixels_number"
             android:textColor="@color/transparent_dark_gray"
             android:textSize="18sp"/>
 
@@ -34,7 +34,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:gravity="center"
-            android:text="Average color"
+            android:text="@string/message__avg_color"
             android:textColor="@color/transparent_dark_gray"
             android:textSize="18sp"/>
 
@@ -75,7 +75,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Checking internet connection..."
+            android:text="@string/message__check_online"
             android:textColor="@color/gray"/>
 
     </LinearLayout>

@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements TextureView.Surfa
                 try {
                     cam = Camera.open(camIdx);
                 } catch (RuntimeException e) {
-                    Toast.makeText(this, "Can't open camera", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, R.string.error__camera, Toast.LENGTH_SHORT).show();
                     Log.d("++++++", "Camera failed to open: " + e.getLocalizedMessage(), e);
                 }
             }
@@ -125,7 +125,7 @@ public class MainActivity extends AppCompatActivity implements TextureView.Surfa
             mButtonTakePhoto.setEnabled(false);
             mCamera.takePicture(null, null, this);
         } else {
-            Toast.makeText(this, "No camera", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.error__camera, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -139,7 +139,7 @@ public class MainActivity extends AppCompatActivity implements TextureView.Surfa
             @Override
             protected void onPreExecute() {
                 progressDialog = new ProgressDialog(MainActivity.this);
-                progressDialog.setMessage("Analyzing pixels...");
+                progressDialog.setMessage(getString(R.string.message__analyzing));
                 progressDialog.setCancelable(false);
                 progressDialog.show();
             }

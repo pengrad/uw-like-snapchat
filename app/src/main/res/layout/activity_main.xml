@@ -21,7 +21,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="top|center"
         android:layout_marginTop="50dp"
-        android:text="My cool title"
+        android:text="@string/title__main"
         android:textColor="@color/blue"
         android:textSize="48sp"/>
 
@@ -32,7 +32,7 @@
         android:layout_gravity="bottom|center"
         android:layout_marginBottom="50dp"
         android:background="@drawable/bg_round_rectangle"
-        android:text="Analyze"/>
+        android:text="@string/button__analyze"/>
 
     <Button
         android:id="@+id/buttonTakePhoto"
