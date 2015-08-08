@@ -20,6 +20,9 @@ public class MainActivity extends AppCompatActivity implements TextureView.Surfa
     private Camera mCamera;
 
     private View mTansparentView;
+    private Button mButtonStart;
+    private Button mButtonTakePhoto;
+    private View mTextTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,10 +39,12 @@ public class MainActivity extends AppCompatActivity implements TextureView.Surfa
         textureView.setSurfaceTextureListener(this);
 
         mTansparentView = findViewById(R.id.transparentView);
-        mTansparentView.setVisibility(View.VISIBLE);
+        mTextTitle = findViewById(R.id.textTitle);
 
-        Button button = (Button) findViewById(R.id.button);
-        button.setOnClickListener(this);
+        mButtonStart = (Button) findViewById(R.id.buttonStart);
+        mButtonTakePhoto = (Button) findViewById(R.id.buttonTakePhoto);
+        mButtonStart.setOnClickListener(this);
+        mButtonTakePhoto.setOnClickListener(this);
     }
 
     private Camera openFrontFacingCamera() {
@@ -92,9 +97,12 @@ public class MainActivity extends AppCompatActivity implements TextureView.Surfa
 
     @Override
     public void onClick(View v) {
-        if (mTansparentView.getVisibility() == View.VISIBLE) {
+        if (v.getId() == mButtonStart.getId()) {
             mTansparentView.setVisibility(View.GONE);
-        } else {
+            mTextTitle.setVisibility(View.GONE);
+            mButtonStart.setVisibility(View.GONE);
+            mButtonTakePhoto.setVisibility(View.VISIBLE);
+        } else if (v.getId() == mButtonTakePhoto.getId()) {
             mCamera.takePicture(null, null, this);
         }
     }
@@ -120,11 +128,9 @@ public class MainActivity extends AppCompatActivity implements TextureView.Surfa
 
             @Override
             protected void onPostExecute(Integer pixelsCount) {
-                progressDialog.hide();
+                progressDialog.dismiss();
                 startActivity(DataActivity.newIntent(MainActivity.this, pixelsCount));
             }
         }.execute();
     }
-
-
 }

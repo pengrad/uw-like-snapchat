@@ -16,22 +16,32 @@
         android:background="@color/transparent_gray"/>
 
     <TextView
+        android:id="@+id/textTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="top|center"
         android:layout_marginTop="50dp"
         android:text="My cool title"
         android:textColor="@color/blue"
-        android:textSize="26sp"/>
+        android:textSize="48sp"/>
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/buttonStart"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center"
-        android:background="@drawable/bg_round_rectangle"
         android:layout_marginBottom="50dp"
+        android:background="@drawable/bg_round_rectangle"
         android:text="Analyze"/>
+
+    <Button
+        android:id="@+id/buttonTakePhoto"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_gravity="bottom|center"
+        android:layout_marginBottom="50dp"
+        android:background="@drawable/bg_circle_with_ring"
+        android:visibility="gone"/>
 
 
 </FrameLayout>

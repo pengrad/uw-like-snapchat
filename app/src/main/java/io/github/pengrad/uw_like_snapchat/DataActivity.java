@@ -36,7 +36,7 @@ public class DataActivity extends AppCompatActivity {
 
         int count = getIntent().getIntExtra(EXTRA_PIXELS_COUNT, 0);
 
-        TextView textView = (TextView) findViewById(R.id.textNumber);
+        TextView textView = (TextView) findViewById(R.id.textPixelsCount);
         textView.setText(String.valueOf(count));
     }
 
