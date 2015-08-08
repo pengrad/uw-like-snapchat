@@ -109,12 +109,14 @@ public class MainActivity extends AppCompatActivity implements TextureView.Surfa
             mButtonStart.setVisibility(View.GONE);
             mButtonTakePhoto.setVisibility(View.VISIBLE);
         } else if (v.getId() == mButtonTakePhoto.getId()) {
+            mButtonTakePhoto.setEnabled(false);
             mCamera.takePicture(null, null, this);
         }
     }
 
     @Override
     public void onPictureTaken(final byte[] data, Camera camera) {
+        mButtonTakePhoto.setEnabled(true);
         camera.startPreview();
         new AsyncTask<Void, BitmapColorInfo, BitmapColorInfo>() {
             ProgressDialog progressDialog;

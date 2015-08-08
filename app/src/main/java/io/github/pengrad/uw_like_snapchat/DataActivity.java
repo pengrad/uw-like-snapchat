@@ -3,9 +3,11 @@ package io.github.pengrad.uw_like_snapchat;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -26,6 +28,8 @@ public class DataActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d("+++", System.currentTimeMillis() / 1000 + "");
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_second);
 
@@ -50,7 +54,38 @@ public class DataActivity extends AppCompatActivity {
         int green = Color.green(avgColor);
         int blue = Color.blue(avgColor);
         textAvgRGB.setText(String.format("RGB (%d, %d, %d)", red, green, blue));
+
+        Log.d("+++", System.currentTimeMillis() / 1000 + "");
+
+        final View progressView = findViewById(R.id.progressOnline);
+        final TextView textOnline = (TextView) findViewById(R.id.textOnline);
+
+        new AsyncTask<Void, NetworkStatus.Status, NetworkStatus.Status>() {
+            @Override
+            protected NetworkStatus.Status doInBackground(Void... params) {
+                return NetworkStatus.checkNetwork(getApplicationContext());
+            }
+
+
+            @Override
+            protected void onPostExecute(NetworkStatus.Status status) {
+                progressView.setVisibility(View.GONE);
+                if (status.networkType != null) {
+                    if (status.isInternet) {
+                        textOnline.setTextColor(getResources().getColor(R.color.green));
+                        textOnline.setText("Online with " + status.networkType);
+                    } else {
+                        textOnline.setTextColor(getResources().getColor(R.color.red));
+                        textOnline.setText("Offline with " + status.networkType);
+                    }
+                } else {
+                    textOnline.setTextColor(getResources().getColor(R.color.red));
+                    textOnline.setText("Offline");
+                }
+            }
+        }.execute();
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

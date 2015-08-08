@@ -23,8 +23,10 @@ public class PixelCalculator {
         int pixelsConditionCount = 0;
         long reds = 0, greens = 0, blues = 0;
 
-        for (int w = 0; w < bitmap.getWidth(); w++) {
-            for (int h = 0; h < bitmap.getHeight(); h++) {
+//        for (int w = 0; w < bitmap.getWidth(); w++) {
+//            for (int h = 0; h < bitmap.getHeight(); h++) {
+        for (int w = 0; w < 100; w++) {
+            for (int h = 0; h < 100; h++) {
                 int color = bitmap.getPixel(w, h);
 
                 int red = Color.red(color);
