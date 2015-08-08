@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.TextureView;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import java.io.IOException;
 
@@ -53,7 +54,7 @@ public class MainActivity extends AppCompatActivity implements TextureView.Surfa
         mPixelCalculator = new PixelCalculator(COLOR_CONDITION);
     }
 
-    private Camera openFrontFacingCamera() {
+    private Camera openBackCamera() {
         int cameraCount = 0;
         Camera cam = null;
         Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
@@ -64,19 +65,19 @@ public class MainActivity extends AppCompatActivity implements TextureView.Surfa
                 try {
                     cam = Camera.open(camIdx);
                 } catch (RuntimeException e) {
-                    Log.d("+++++++", "Camera failed to open: " + e.getLocalizedMessage(), e);
+                    Toast.makeText(this, "Can't open camera", Toast.LENGTH_SHORT).show();
+                    Log.d("++++++", "Camera failed to open: " + e.getLocalizedMessage(), e);
                 }
             }
         }
-
         return cam;
     }
 
     @Override
     public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
-        mCamera = openFrontFacingCamera();
-        mCamera.setDisplayOrientation(90);
+        mCamera = openBackCamera();
         try {
+            mCamera.setDisplayOrientation(90);
             mCamera.setPreviewTexture(surface);
             mCamera.startPreview();
         } catch (IOException ioe) {
@@ -85,15 +86,17 @@ public class MainActivity extends AppCompatActivity implements TextureView.Surfa
     }
 
     @Override
-    public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
-        // Ignored, Camera does all the work for us
+    public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
+        if (mCamera != null) {
+            mCamera.stopPreview();
+            mCamera.release();
+        }
+        return true;
     }
 
     @Override
-    public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
-        mCamera.stopPreview();
-        mCamera.release();
-        return true;
+    public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
+        // Ignored, Camera does all the work for us
     }
 
     @Override
@@ -104,13 +107,25 @@ public class MainActivity extends AppCompatActivity implements TextureView.Surfa
     @Override
     public void onClick(View v) {
         if (v.getId() == mButtonStart.getId()) {
-            mTransparentView.setVisibility(View.GONE);
-            mTextTitle.setVisibility(View.GONE);
-            mButtonStart.setVisibility(View.GONE);
-            mButtonTakePhoto.setVisibility(View.VISIBLE);
+            startTakingPhoto();
         } else if (v.getId() == mButtonTakePhoto.getId()) {
+            takePhoto();
+        }
+    }
+
+    private void startTakingPhoto() {
+        mTransparentView.setVisibility(View.GONE);
+        mTextTitle.setVisibility(View.GONE);
+        mButtonStart.setVisibility(View.GONE);
+        mButtonTakePhoto.setVisibility(View.VISIBLE);
+    }
+
+    private void takePhoto() {
+        if (mCamera != null) {
             mButtonTakePhoto.setEnabled(false);
             mCamera.takePicture(null, null, this);
+        } else {
+            Toast.makeText(this, "No camera", Toast.LENGTH_SHORT).show();
         }
     }
 

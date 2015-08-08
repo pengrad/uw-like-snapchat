@@ -7,7 +7,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -28,11 +27,8 @@ public class DataActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.d("+++", System.currentTimeMillis() / 1000 + "");
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_second);
-
         setTitle("Result activity");
 
         ActionBar bar = getSupportActionBar();
@@ -41,11 +37,19 @@ public class DataActivity extends AppCompatActivity {
         }
 
         BitmapColorInfo bitmapColorInfo = (BitmapColorInfo) getIntent().getSerializableExtra(EXTRA_BITMAP_INFO);
-        int avgColor = bitmapColorInfo.getAvgColor();
 
+        initPixelsCount(bitmapColorInfo);
+        initAvgColor(bitmapColorInfo);
+        initCheckOnline();
+    }
+
+    private void initPixelsCount(BitmapColorInfo bitmapColorInfo) {
         TextView textView = (TextView) findViewById(R.id.textPixelsCount);
         textView.setText(String.valueOf(bitmapColorInfo.getPixelsConditionCount()));
+    }
 
+    private void initAvgColor(BitmapColorInfo bitmapColorInfo) {
+        int avgColor = bitmapColorInfo.getAvgColor();
         View viewAvgColor = findViewById(R.id.viewAvgColor);
         viewAvgColor.setBackgroundColor(avgColor);
 
@@ -54,9 +58,9 @@ public class DataActivity extends AppCompatActivity {
         int green = Color.green(avgColor);
         int blue = Color.blue(avgColor);
         textAvgRGB.setText(String.format("RGB (%d, %d, %d)", red, green, blue));
+    }
 
-        Log.d("+++", System.currentTimeMillis() / 1000 + "");
-
+    private void initCheckOnline() {
         final View progressView = findViewById(R.id.progressOnline);
         final TextView textOnline = (TextView) findViewById(R.id.textOnline);
 
@@ -65,7 +69,6 @@ public class DataActivity extends AppCompatActivity {
             protected NetworkStatus.Status doInBackground(Void... params) {
                 return NetworkStatus.checkNetwork(getApplicationContext());
             }
-
 
             @Override
             protected void onPostExecute(NetworkStatus.Status status) {
@@ -85,7 +88,6 @@ public class DataActivity extends AppCompatActivity {
             }
         }.execute();
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
